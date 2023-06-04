@@ -27,7 +27,28 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'drf-spectacular API Document',
+    'DESCRIPTION': 'drf-specatular를 사용하여 생성한 API 문서입니다.',
+    'CONTACT': {'name': 'kant', 'url': 'http://www.example.com/support', 'email': 'dev.yamkim@gmail.com'},
+    'SWAGGER_UI_SETTINGS': {
+        'dom_id': '#swagger-ui',
+        'layout': 'BaseLayout',
+        'deepLinking': True,
+        'persistAuthorization': True,
+        'displayOperationId': True, 
+        'filter': True,
+    },
+    'LICENSE': {
+        'name': 'MIT License',
+    },
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_DIST': '//unpkg.com/swagger-ui-dist@3.38.0',
+}
+
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -47,6 +68,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
