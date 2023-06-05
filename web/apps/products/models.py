@@ -9,7 +9,7 @@ class Product(BaseModel):
     prod_link = models.CharField(default="-", max_length=300, null=False)
     prod_price = models.IntegerField(default=0, null=False)
     prod_discount = models.IntegerField(default=0, null=False)
-    prod_thumbnail = models.IntegerField(default=0, null=False)
+    prod_thumbnail = models.CharField(default="-", max_length=300, null=False)
 
     brand_seq = models.ForeignKey(to="products.Brand", db_column="brand_seq", on_delete=models.PROTECT)
 
