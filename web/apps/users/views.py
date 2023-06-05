@@ -12,7 +12,6 @@ from drf_spectacular.utils import extend_schema
 @extend_schema(
     tags=["사용자"],
     summary="새로운 사용자를 추가합니다.",
-    # examples = USER_CREATE_EXAMPLES,
 )
 class UserCreateAPIView(CreateAPIView):
     permission_classes = [AllowAny]

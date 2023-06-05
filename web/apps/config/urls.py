@@ -20,6 +20,7 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('users/', include('users.urls.users')),
     path('auth/', include('users.urls.auth')),
+    path('products/', include('products.urls.products')),
 ]
 
 from drf_spectacular.views import SpectacularJSONAPIView
