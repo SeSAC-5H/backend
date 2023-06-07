@@ -10,6 +10,7 @@ class Product(BaseModel):
     prod_price = models.IntegerField(default=0, null=False)
     prod_discount = models.IntegerField(default=0, null=False)
     prod_thumbnail = models.CharField(default="-", max_length=300, null=False)
+    src_comp = models.CharField(default="-", max_length=45, null=False)
 
     brand_seq = models.ForeignKey(to="products.Brand", db_column="brand_seq", on_delete=models.PROTECT)
 
@@ -35,3 +36,13 @@ class Hashtag(BaseModel):
     class Meta:
         managed = True
         db_table = 'hashtags'
+
+class ProductHashtag(BaseModel):
+    prod_hash_seq = models.AutoField(primary_key=True)
+
+    prod_seq = models.ForeignKey(to="products.Product", db_column="prod_seq", on_delete=models.PROTECT)
+    hash_seq = models.ForeignKey(to="products.Hashtag", db_column="hash_seq", on_delete=models.PROTECT)
+
+    class Meta:
+        managed = True
+        db_table = 'productHashtags'

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
-from products.serializers import ProductCreateSerializer, BrandCreateSerializer, HashtagCreateSerializer
+from products.serializers import ProductCreateSerializer, BrandCreateSerializer, HashtagCreateSerializer, ProductHashtagCreateSerializer
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
@@ -67,5 +67,25 @@ class HashtagCreateAPIView(CreateAPIView):
             data['message'] = "해시태그가 정상적으로 추가되었습니다."
             return Response(data, status=status.HTTP_201_CREATED)
         except Exception as e:
+            data['message'] = str(e)
+            return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@extend_schema(
+    tags=["상품"],
+    summary="상품과 해시태그를 연결합니다.",
+)
+class ProductHashtagCreateAPIView(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ProductHashtagCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = {}
+        try:
+            response = super().create(request, *args, **kwargs)
+            # TODO: response를 출력하기 위한 LOGGER 추가
+            data['message'] = "상품과 해시태그가 정상적으로 연결되었습니다."
+            return Response(data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            print(e)
             data['message'] = str(e)
             return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
