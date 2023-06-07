@@ -22,6 +22,7 @@ urlpatterns = [
     path('auth/', include('users.urls.auth')),
     path('products/', include('products.urls.products')),
     path('brands/', include('products.urls.brands')),
+    path('hashtags/', include('products.urls.hashtags')),
 ]
 
 from drf_spectacular.views import SpectacularJSONAPIView
@@ -34,5 +35,4 @@ urlpatterns += [
     path("docs/yaml/", SpectacularYAMLAPIView.as_view(), name="swagger-yaml"),
     path("docs/swagger/", SpectacularSwaggerView.as_view(url_name="schema-json"), name="swagger-ui",),
     path("docs/redoc/", SpectacularRedocView.as_view(url_name="schema-json"), name="redoc",),
-
 ]

@@ -4,7 +4,7 @@ from core.serializers import CreateSerializer
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 
-from products.models import Product, Brand
+from products.models import Product, Brand, Hashtag, ProductHashtag
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,3 +63,45 @@ class BrandCreateSerializer(CreateSerializer):
     
     def create(self, validated_data):
         return Brand.objects.create(**validated_data)
+
+class HashtagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hashtag
+        exclude = [
+            'updated_at',
+            'created_at'
+        ]
+
+class HashtagCreateSerializer(CreateSerializer):
+    representation_serializer_class = HashtagSerializer
+
+    class Meta:
+        model = Hashtag
+        fields = [
+            'hash_name',
+            'room_type',
+        ]
+    
+    def create(self, validated_data):
+        return Hashtag.objects.create(**validated_data)
+
+class ProductHashtagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductHashtag
+        exclude = [
+            'updated_at',
+            'created_at'
+        ]
+
+class ProductHashtagCreateSerializer(CreateSerializer):
+    representation_serializer_class = ProductHashtagSerializer
+
+    class Meta:
+        model = ProductHashtag
+        fields = [
+            'prod_seq',
+            'hash_seq',
+        ]
+    
+    def create(self, validated_data):
+        return ProductHashtag.objects.create(**validated_data)

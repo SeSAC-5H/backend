@@ -35,3 +35,13 @@ class Hashtag(BaseModel):
     class Meta:
         managed = True
         db_table = 'hashtags'
+
+class ProductHashtag(BaseModel):
+    prod_hash_seq = models.AutoField(primary_key=True)
+
+    prod_seq = models.ForeignKey(to="products.Product", db_column="prod_seq", on_delete=models.PROTECT)
+    hash_seq = models.ForeignKey(to="products.Hashtag", db_column="hash_seq", on_delete=models.PROTECT)
+
+    class Meta:
+        managed = True
+        db_table = 'productHashtags'
