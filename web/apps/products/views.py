@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
 
+from products.models import Product, Hashtag
+
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema_view
 from drf_spectacular.utils import extend_schema
@@ -85,7 +87,12 @@ class ProductHashtagCreateAPIView(CreateAPIView):
             # TODO: response를 출력하기 위한 LOGGER 추가
             data['message'] = "상품과 해시태그가 정상적으로 연결되었습니다."
             return Response(data, status=status.HTTP_201_CREATED)
+        except Product.DoesNotExist:
+            data['message'] = "등록되지 않은 prod_name입니다."
+            return Response(data, status=status.HTTP_404_NOT_FOUND)
+        except Hashtag.DoesNotExist:
+            data['message'] = "등록되지 않은 hash_name입니다."
+            return Response(data, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            print(e)
             data['message'] = str(e)
             return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
