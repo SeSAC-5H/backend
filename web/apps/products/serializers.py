@@ -95,13 +95,20 @@ class ProductHashtagSerializer(serializers.ModelSerializer):
 
 class ProductHashtagCreateSerializer(CreateSerializer):
     representation_serializer_class = ProductHashtagSerializer
+    prod_name = serializers.CharField(max_length=100)
+    hash_name = serializers.CharField(max_length=100)
 
     class Meta:
         model = ProductHashtag
         fields = [
-            'prod_seq',
-            'hash_seq',
+            'prod_name',
+            'hash_name',
         ]
     
     def create(self, validated_data):
+        prodName = validated_data.pop('prod_name')
+        hashName = validated_data.pop('hash_name')
+        validated_data['prod_seq'] = Product.objects.get(prod_name=prodName)
+        validated_data['hash_seq'] = Hashtag.objects.get(hash_name=hashName)
+        # raise Exception('hihi')
         return ProductHashtag.objects.create(**validated_data)
