@@ -13,6 +13,9 @@ class Product(BaseModel):
 
     brand_seq = models.ForeignKey(to="products.Brand", db_column="brand_seq", on_delete=models.PROTECT)
 
+    def get_brand_name(self):
+        return self.brand_seq.brand_name
+
     class Meta:
         managed = True
         db_table = 'products'

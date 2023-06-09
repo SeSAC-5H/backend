@@ -1,24 +1,63 @@
 from django.shortcuts import render
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListCreateAPIView
 from rest_framework.permissions import AllowAny
-from products.serializers import ProductCreateSerializer, BrandCreateSerializer, HashtagCreateSerializer, ProductHashtagCreateSerializer
+from products.serializers import ProductCreateSerializer, BrandCreateSerializer, HashtagCreateSerializer, ProductHashtagCreateSerializer, ProductSerializer
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
 
-from products.models import Product, Hashtag
+from products.models import Product, Hashtag, ProductHashtag
 
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema_view
 from drf_spectacular.utils import extend_schema
+from products.paginations import ProductPagination
 
 @extend_schema(
-    tags=["상품"],
-    summary="새로운 상품을 추가합니다.",
-)
-class ProductCreateAPIView(CreateAPIView):
+        tags=["상품"],
+        summary="상품을 조회 및 추가합니다.",
+        parameters=[
+            OpenApiParameter(
+                name="room_type",
+                description="룸타입을 지정해 주세요.",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+            ),
+            OpenApiParameter(
+                name="page",
+                description="페이지 순번입니다.",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+            ),
+            OpenApiParameter(
+                name="page_size",
+                description="한 페이지에 표시할 개체 수입니다.",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+            ),
+        ],
+    )
+class ProductListCreateAPIView(ListCreateAPIView):
     permission_classes = [AllowAny]
-    serializer_class = ProductCreateSerializer
+    pagination_class = ProductPagination
+
+    def list(self, request, *args, **kwargs):
+        queryParams = request.query_params
+        if 'room_type' in queryParams:
+            roomType = queryParams['room_type']
+            hashQs = Hashtag.objects.filter(room_type__startswith=roomType)
+            prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq__in=hashQs)
+            prodQs = [
+                prodHashQ.prod_seq
+                for prodHashQ in prodHashQs
+            ]
+            prodSerializer = ProductSerializer(prodQs, many=True)
+        else:
+            prodSerializer = ProductSerializer(Product.objects.all(), many=True)
+        
+        ret = prodSerializer.data
+        return Response(ret, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         data = {}
