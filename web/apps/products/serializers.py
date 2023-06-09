@@ -7,12 +7,19 @@ from django.http import Http404
 from products.models import Product, Brand, Hashtag, ProductHashtag
 
 class ProductSerializer(serializers.ModelSerializer):
+    brand_name = serializers.CharField(source='get_brand_name')
+
     class Meta:
         model = Product
-        exclude = [
-            'updated_at',
-            'created_at'
+        fields = [
+            'prod_name',
+            'prod_link',
+            'prod_price',
+            'prod_discount',
+            'prod_thumbnail',
+            'brand_name'
         ]
+        
 
 class ProductCreateSerializer(CreateSerializer):
     representation_serializer_class = ProductSerializer
