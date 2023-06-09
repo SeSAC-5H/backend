@@ -1,8 +1,8 @@
 from django.urls import path
-from products.views import HashtagCreateAPIView
+from products.views import HashtagListCreateAPIView
 
 app_name = "hashtags"
 
 urlpatterns = [
-    path("", HashtagCreateAPIView.as_view(), name="create"),
+    path("", HashtagListCreateAPIView.as_view(), name="list-create"),
 ]
