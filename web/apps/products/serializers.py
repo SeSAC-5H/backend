@@ -75,6 +75,7 @@ class HashtagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hashtag
         fields = [
+            'hash_seq',
             'hash_name',
             'room_type',
             'hash_desc',
