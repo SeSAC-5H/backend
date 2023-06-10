@@ -5,10 +5,46 @@ from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
 from stores.models import Stores
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter
+from drf_spectacular.utils import extend_schema, OpenApiExample
+
 
 # Create your views here.
 
 
+@extend_schema(
+    tags=["상점"],
+    summary="상점 상세정보를 조회 및 추가합니다.",
+    parameters=[
+        OpenApiParameter(
+            name="store_type",
+            description="상점 타입을 지정해 주세요.",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+            examples=[
+                OpenApiExample(
+                    name="1-카페",
+                ),
+                OpenApiExample(
+                    name="1-식당",
+                ),
+                OpenApiExample(
+                    name="3-리필샵",
+                ),
+                OpenApiExample(
+                    name="4-생필품",
+                ),
+                OpenApiExample(
+                    name="5-기타",
+                ),
+                OpenApiExample(
+                    name="없음-전체",
+                ),
+            ],
+        ),
+    ],
+)
 class StoreListCreateAPIView(ListCreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = StoreCreateSerializer
