@@ -34,6 +34,7 @@ class Hashtag(BaseModel):
     hash_name = models.CharField(default="-", max_length=100, null=False)
     room_type = models.CharField(default="-", max_length=4, null=False)
     hash_desc = models.CharField(default="-", max_length=1000, null=False)
+    hash_thumbnail = models.CharField(default="-", max_length=300, null=False)
 
     class Meta:
         managed = True

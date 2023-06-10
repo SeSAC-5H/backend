@@ -74,9 +74,11 @@ class BrandCreateSerializer(CreateSerializer):
 class HashtagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hashtag
-        exclude = [
-            'updated_at',
-            'created_at'
+        fields = [
+            'hash_name',
+            'room_type',
+            'hash_desc',
+            'hash_thumbnail',
         ]
 
 class HashtagCreateSerializer(CreateSerializer):
