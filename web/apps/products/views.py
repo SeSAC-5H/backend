@@ -23,8 +23,8 @@ import os
         summary="상품을 조회 및 추가합니다.",
         parameters=[
             OpenApiParameter(
-                name="room_type",
-                description="룸타입을 지정해 주세요.",
+                name="hash_name",
+                description="해시태그 이름을 지정해 주세요.",
                 type=OpenApiTypes.STR,
                 location=OpenApiParameter.QUERY,
             ),
@@ -49,15 +49,16 @@ class ProductListCreateAPIView(ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
-        if 'room_type' in queryParams:
-            roomType = queryParams['room_type']
-            hashQs = Hashtag.objects.filter(room_type__startswith=roomType)
+        if 'hash_name' in queryParams:
+            hashName = queryParams['hash_name']
+            hashQs = Hashtag.objects.filter(hash_name=hashName)
             prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq__in=hashQs)
             prodQs = [
                 prodHashQ.prod_seq
                 for prodHashQ in prodHashQs
             ]
             prodSerializer = ProductSerializer(prodQs, many=True)
+        
         else:
             prodSerializer = ProductSerializer(Product.objects.all(), many=True)
         
