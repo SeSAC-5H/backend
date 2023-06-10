@@ -8,7 +8,7 @@ from stores.models import Stores
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter
 from drf_spectacular.utils import extend_schema, OpenApiExample
-
+from geopy.distance import distance
 
 # Create your views here.
 
@@ -48,6 +48,7 @@ from drf_spectacular.utils import extend_schema, OpenApiExample
 class StoreListCreateAPIView(ListCreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = StoreCreateSerializer
+    stores = Stores.objects.exclude(store_subcate="1")
 
     def create(self, request, *args, **kwargs):
         data = {}
@@ -65,11 +66,29 @@ class StoreListCreateAPIView(ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
-        if "store_type" in queryParams:
-            storeType = queryParams["store_type"]
-            serializer = StoreSerializer(
-                Stores.objects.filter(store_subcate=storeType), many=True
+
+        if "coord_x" in queryParams and "coord_y" in queryParams:
+            user_location = (
+                float(queryParams["coord_y"]),
+                float(queryParams["coord_x"]),
             )
+            near_stores = []
+            for store in self.stores:
+                store_location = (
+                    float(store.store_coord_y),
+                    float(store.store_coord_x),
+                )
+                if distance(user_location, store_location).m <= 50:
+                    serializer = StoreSerializer(store)
+                    near_stores.append(
+                        {
+                            "store": serializer.data,
+                            "distance": distance(
+                                user_location, store_location
+                            ).m,
+                        }
+                    )
+            return Response(near_stores, status=status.HTTP_200_OK)
         else:
-            serializer = StoreSerializer(Stores.objects.all(), many=True)
+            serializer = StoreSerializer(self.stores, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
