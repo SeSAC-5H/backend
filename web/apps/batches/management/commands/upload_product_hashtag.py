@@ -5,11 +5,15 @@ import requests
 import time
 import re
 
+
 class Command(BaseCommand):
-    help = 'Upload product-hashtag list'
+    help = "Upload product-hashtag list"
 
     def handle(self, *args, **options):
-        csvFile = settings.BASE_DIR.parent / "batches/management/commands/seeder_product_hashtags.csv"
+        csvFile = (
+            settings.BASE_DIR.parent
+            / "batches/management/commands/seeder_product_hashtags.csv"
+        )
         df = pd.read_csv(csvFile, header=0)
 
         endPoint = "http://127.0.0.1:8000/products/hashtags/"
@@ -18,10 +22,10 @@ class Command(BaseCommand):
         for idx, row in df.iterrows():
             response = requests.post(
                 url=endPoint,
-                json= {
-                    "prod_name": row['prod_name'],
-                    "hash_name": row['hash_name'],
-                }
+                json={
+                    "prod_name": row["prod_name"],
+                    "hash_name": row["hash_name"],
+                },
             )
             print(idx)
             respResults[idx] = response.status_code
@@ -30,7 +34,7 @@ class Command(BaseCommand):
             # print(response)
             time.sleep(0.5)
 
-        df['res'] = respResults
+        df["res"] = respResults
         # print(df)
 
-        df.to_csv('result-product-hash.csv', index=False)
+        df.to_csv("result-product-hash.csv", index=False)
