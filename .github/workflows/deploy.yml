@@ -27,5 +27,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /home/ec2-user/git/backend/
+            git pull
             docker-compose build
             docker-compose up -d
