@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, ListCreateAPIView
 from rest_framework.permissions import AllowAny
-from products.serializers import ProductCreateSerializer, BrandCreateSerializer, HashtagCreateSerializer, ProductHashtagCreateSerializer, ProductSerializer
+from products.serializers import ProductCreateSerializer, BrandCreateSerializer, HashtagCreateSerializer, ProductHashtagCreateSerializer, ProductSerializer, HashtagSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from django.http import Http404
@@ -94,11 +94,40 @@ class BrandCreateAPIView(CreateAPIView):
 
 @extend_schema(
     tags=["상품"],
-    summary="새로운 해시태그를 추가합니다.",
+    summary="새로운 해시태그를 조회 및 추가합니다.",
+    parameters=[
+        OpenApiParameter(
+            name="room_type",
+            description="룸타입을 지정해 주세요.",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+        ),
+        OpenApiParameter(
+            name="page",
+            description="페이지 순번입니다.",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+        ),
+        OpenApiParameter(
+            name="page_size",
+            description="한 페이지에 표시할 개체 수입니다.",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+        ),
+    ],
 )
-class HashtagCreateAPIView(CreateAPIView):
+class HashtagListCreateAPIView(ListCreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = HashtagCreateSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryParams = request.query_params
+        ret = {}
+        if 'room_type' in queryParams:
+            roomType = queryParams['room_type']
+            hashSerializer = HashtagSerializer(Hashtag.objects.filter(room_type__startswith=roomType), many=True)
+            ret = hashSerializer.data
+        return Response(ret, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         data = {}
