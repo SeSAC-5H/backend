@@ -1,9 +1,10 @@
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import AllowAny
-from stores.serializers import StoreCreateSerializer
+from stores.serializers import StoreCreateSerializer, StoreSerializer
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
+from stores.models import Stores
 
 # Create your views here.
 
@@ -25,3 +26,14 @@ class StoreListCreateAPIView(ListCreateAPIView):
             data["message"] = str(e)
             return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(data, status=status.HTTP_201_CREATED)
+
+    def list(self, request, *args, **kwargs):
+        queryParams = request.query_params
+        if "store_type" in queryParams:
+            storeType = queryParams["store_type"]
+            serializer = StoreSerializer(
+                Stores.objects.filter(store_subcate=storeType), many=True
+            )
+        else:
+            serializer = StoreSerializer(Stores.objects.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
