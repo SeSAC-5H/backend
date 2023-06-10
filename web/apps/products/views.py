@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, ListCreateAPIView
 from rest_framework.permissions import AllowAny
 from products.serializers import ProductCreateSerializer, BrandCreateSerializer, HashtagCreateSerializer, ProductHashtagCreateSerializer, ProductSerializer, HashtagSerializer
@@ -13,6 +14,9 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema_view
 from drf_spectacular.utils import extend_schema
 from products.paginations import ProductPagination
+
+import json
+import os
 
 @extend_schema(
         tags=["상품"],
@@ -165,3 +169,37 @@ class ProductHashtagCreateAPIView(CreateAPIView):
         except Exception as e:
             data['message'] = str(e)
             return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@extend_schema(
+    tags=["상품"],
+    summary="해시태그를 위한 카테고리를 조회합니다.",
+    parameters=[
+        OpenApiParameter(
+            name="room_type",
+            description="룸타입을 지정해 주세요.",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+        ),
+    ],
+)
+class HashtagCategoryAPIView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        curPath = os.getcwd()
+        targetPath = os.path.join(curPath, 'products/json/subcategory.json')
+        with open(targetPath, 'r') as file:
+            data = json.load(file)
+        tmpDictList = []
+        for k, v in data.items():
+            tmpDictList.append({
+                'room_type': k,
+                'category': v
+            })
+        
+        filt = "RT"
+        if 'room_type' in request.query_params:
+            filt = request.query_params['room_type']
+        
+        filteredDictList = [d for d in tmpDictList if d['room_type'].startswith(filt)]
+        return Response(filteredDictList, status=status.HTTP_200_OK)
+
