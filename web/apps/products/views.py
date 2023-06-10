@@ -55,24 +55,30 @@ class ProductListCreateAPIView(ListCreateAPIView):
             page = int(queryParams['page'])
         if 'page_size' in queryParams:
             pageSize = int(queryParams['page_size'])
-        startIdx = page * pageSize
+        startIdx = (page - 1) * pageSize
         endIdx = startIdx + pageSize
 
+        prodData = []
         if 'hash_seq' in queryParams:
             hashSeq = queryParams['hash_seq']
             hashQ = get_object_or_404(Hashtag, hash_seq=hashSeq)
-            prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq=hashQ.hash_seq)[startIdx:endIdx]
+            prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq=hashQ.hash_seq)
             prodQs = [
                 prodHashQ.prod_seq
                 for prodHashQ in prodHashQs
             ]
             prodSerializer = ProductSerializer(prodQs, many=True)
+
+            totalProductCnt = len(prodSerializer.data)
+            prodData = prodSerializer.data[startIdx:endIdx]
+
         else:
+            totalProductCnt = Product.objects.all().count()
             prodSerializer = ProductSerializer(Product.objects.all()[startIdx:endIdx], many=True)
-        totalProductCnt = Product.objects.all().count()
+            prodData = prodSerializer.data
         
         retData = {
-            'data': prodSerializer.data,
+            'data': prodData,
             'total_pages': (totalProductCnt + pageSize - 1) // pageSize,
             'page': page
         }
