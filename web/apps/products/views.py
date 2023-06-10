@@ -23,8 +23,8 @@ import os
         summary="상품을 조회 및 추가합니다.",
         parameters=[
             OpenApiParameter(
-                name="room_type",
-                description="룸타입을 지정해 주세요.",
+                name="hash_seq",
+                description="해시태그 순번을 지정해 주세요.",
                 type=OpenApiTypes.STR,
                 location=OpenApiParameter.QUERY,
             ),
@@ -49,20 +49,41 @@ class ProductListCreateAPIView(ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
-        if 'room_type' in queryParams:
-            roomType = queryParams['room_type']
-            hashQs = Hashtag.objects.filter(room_type__startswith=roomType)
-            prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq__in=hashQs)
+        page = 1
+        pageSize = 10
+        if 'page' in queryParams:
+            page = int(queryParams['page'])
+        if 'page_size' in queryParams:
+            pageSize = int(queryParams['page_size'])
+        startIdx = (page - 1) * pageSize
+        endIdx = startIdx + pageSize
+
+        prodData = []
+        if 'hash_seq' in queryParams:
+            hashSeq = queryParams['hash_seq']
+            hashQ = get_object_or_404(Hashtag, hash_seq=hashSeq)
+            prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq=hashQ.hash_seq)
             prodQs = [
                 prodHashQ.prod_seq
                 for prodHashQ in prodHashQs
             ]
             prodSerializer = ProductSerializer(prodQs, many=True)
+
+            totalProductCnt = len(prodSerializer.data)
+            prodData = prodSerializer.data[startIdx:endIdx]
+
         else:
-            prodSerializer = ProductSerializer(Product.objects.all(), many=True)
+            totalProductCnt = Product.objects.all().count()
+            prodSerializer = ProductSerializer(Product.objects.all()[startIdx:endIdx], many=True)
+            prodData = prodSerializer.data
         
-        ret = prodSerializer.data
-        return Response(ret, status=status.HTTP_200_OK)
+        retData = {
+            'data': prodData,
+            'total_pages': (totalProductCnt + pageSize - 1) // pageSize,
+            'page': page
+        }
+        
+        return Response(retData, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         data = {}
@@ -104,18 +125,6 @@ class BrandCreateAPIView(CreateAPIView):
         OpenApiParameter(
             name="room_type",
             description="룸타입을 지정해 주세요.",
-            type=OpenApiTypes.STR,
-            location=OpenApiParameter.QUERY,
-        ),
-        OpenApiParameter(
-            name="page",
-            description="페이지 순번입니다.",
-            type=OpenApiTypes.STR,
-            location=OpenApiParameter.QUERY,
-        ),
-        OpenApiParameter(
-            name="page_size",
-            description="한 페이지에 표시할 개체 수입니다.",
             type=OpenApiTypes.STR,
             location=OpenApiParameter.QUERY,
         ),
@@ -189,17 +198,11 @@ class HashtagCategoryAPIView(APIView):
         targetPath = os.path.join(curPath, 'products/json/subcategory.json')
         with open(targetPath, 'r') as file:
             data = json.load(file)
-        tmpDictList = []
-        for k, v in data.items():
-            tmpDictList.append({
-                'room_type': k,
-                'category': v
-            })
         
         filt = "RT"
         if 'room_type' in request.query_params:
             filt = request.query_params['room_type']
         
-        filteredDictList = [d for d in tmpDictList if d['room_type'].startswith(filt)]
+        filteredDictList = [d for d in data if d['room_type'].startswith(filt)]
         return Response(filteredDictList, status=status.HTTP_200_OK)
 
