@@ -28,5 +28,6 @@ jobs:
           script: |
             cd /home/ec2-user/git/backend/
             git pull
+            sleep 3s
             docker-compose build
             docker-compose up -d

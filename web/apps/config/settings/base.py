@@ -87,7 +87,8 @@ MIDDLEWARE = [
 ]
 
 # CORS 관련 추가
-CORS_ORIGIN_WHITELIST = ['http://*', 'https://*']
+# CORS_ORIGIN_WHITELIST = ['http://*', 'https://*']
+CORS_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'config.urls'
