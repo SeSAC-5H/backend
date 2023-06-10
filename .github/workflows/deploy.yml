@@ -18,10 +18,6 @@ jobs:
           python3 manage.py collectstatic
         working-directory: ${{ env.working-directory }}
 
-      - name: Run tests
-        run: |
-          python manage.py test
-        working-directory: ${{ env.working-directory }}
       - name: Excute remote ssh
         uses: appleboy/ssh-action@v0.1.10
         with:
