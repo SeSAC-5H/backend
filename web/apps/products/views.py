@@ -49,21 +49,35 @@ class ProductListCreateAPIView(ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
+        page = 1
+        pageSize = 10
+        if 'page' in queryParams:
+            page = int(queryParams['page'])
+        if 'page_size' in queryParams:
+            pageSize = int(queryParams['page_size'])
+        startIdx = page * pageSize
+        endIdx = startIdx + pageSize
+
         if 'hash_seq' in queryParams:
             hashSeq = queryParams['hash_seq']
             hashQ = get_object_or_404(Hashtag, hash_seq=hashSeq)
-            prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq=hashQ.hash_seq)
+            prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq=hashQ.hash_seq)[startIdx:endIdx]
             prodQs = [
                 prodHashQ.prod_seq
                 for prodHashQ in prodHashQs
             ]
             prodSerializer = ProductSerializer(prodQs, many=True)
-        
         else:
-            prodSerializer = ProductSerializer(Product.objects.all(), many=True)
+            prodSerializer = ProductSerializer(Product.objects.all()[startIdx:endIdx], many=True)
+        totalProductCnt = Product.objects.all().count()
         
-        ret = prodSerializer.data
-        return Response(ret, status=status.HTTP_200_OK)
+        retData = {
+            'data': prodSerializer.data,
+            'total_pages': (totalProductCnt + pageSize - 1) // pageSize,
+            'page': page
+        }
+        
+        return Response(retData, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         data = {}
@@ -105,18 +119,6 @@ class BrandCreateAPIView(CreateAPIView):
         OpenApiParameter(
             name="room_type",
             description="룸타입을 지정해 주세요.",
-            type=OpenApiTypes.STR,
-            location=OpenApiParameter.QUERY,
-        ),
-        OpenApiParameter(
-            name="page",
-            description="페이지 순번입니다.",
-            type=OpenApiTypes.STR,
-            location=OpenApiParameter.QUERY,
-        ),
-        OpenApiParameter(
-            name="page_size",
-            description="한 페이지에 표시할 개체 수입니다.",
             type=OpenApiTypes.STR,
             location=OpenApiParameter.QUERY,
         ),
