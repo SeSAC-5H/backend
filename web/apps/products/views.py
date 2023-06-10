@@ -23,8 +23,8 @@ import os
         summary="상품을 조회 및 추가합니다.",
         parameters=[
             OpenApiParameter(
-                name="hash_name",
-                description="해시태그 이름을 지정해 주세요.",
+                name="hash_seq",
+                description="해시태그 순번을 지정해 주세요.",
                 type=OpenApiTypes.STR,
                 location=OpenApiParameter.QUERY,
             ),
@@ -49,10 +49,10 @@ class ProductListCreateAPIView(ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
-        if 'hash_name' in queryParams:
-            hashName = queryParams['hash_name']
-            hashQs = Hashtag.objects.filter(hash_name=hashName)
-            prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq__in=hashQs)
+        if 'hash_seq' in queryParams:
+            hashSeq = queryParams['hash_seq']
+            hashQ = get_object_or_404(Hashtag, hash_seq=hashSeq)
+            prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq=hashQ.hash_seq)
             prodQs = [
                 prodHashQ.prod_seq
                 for prodHashQ in prodHashQs
