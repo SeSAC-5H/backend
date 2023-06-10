@@ -1,0 +1,32 @@
+name: Our Workflow
+on: push
+jobs:
+  checkout:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./web/apps/
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 3
+      - run: git log --pretty=oneline
+      - name: Install Dependencies
+        run: |
+          /bin/bash entrypoint.sh
+        working-directory: ${{ env.working-directory }}
+      - name: Run tests
+        run: |
+          python manage.py test
+        working-directory: ${{ env.working-directory }}
+      - name: Excute remote ssh
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /home/ec2-user/git/backend/
+            docker-compose build
+            docker-compose up -d
