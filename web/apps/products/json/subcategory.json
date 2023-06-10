@@ -3,71 +3,71 @@
         "room_type": "RT11",
         "category": "샤워용품",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8B%E1%85%AD%E1%86%A8%E1%84%89%E1%85%B5%E1%86%AF%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7/%E1%84%89%E1%85%A3%E1%84%8B%E1%85%AF%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7.png",
-        "description": "-"
+        "description": "바디워시, 샤워타올, 수건 등"
     }, {
         "room_type": "RT12",
         "category": "구강용품",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8B%E1%85%AD%E1%86%A8%E1%84%89%E1%85%B5%E1%86%AF%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7/%E1%84%80%E1%85%AE%E1%84%80%E1%85%A1%E1%86%BC%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7.png",
-        "description": "-"
+        "description": "칫솔, 치약 등"
     }, {
         "room_type": "RT13",
         "category": "세안용품",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8B%E1%85%AD%E1%86%A8%E1%84%89%E1%85%B5%E1%86%AF%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7/%E1%84%89%E1%85%A6%E1%84%8B%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7.png",
-        "description": "-"
+        "description": "폼클렌징, 비누망 등"
     }, {
         "room_type": "RT14",
         "category": "청소용품",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8B%E1%85%AD%E1%86%A8%E1%84%89%E1%85%B5%E1%86%AF%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7/%E1%84%8E%E1%85%A5%E1%86%BC%E1%84%89%E1%85%A9%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7.png",
-        "description": "-"
+        "description": "락스, 청소솔 등"
     }, {
         "room_type": "RT15",
         "category": "욕실잡화",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8B%E1%85%AD%E1%86%A8%E1%84%89%E1%85%B5%E1%86%AF%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7/%E1%84%8B%E1%85%AD%E1%86%A8%E1%84%89%E1%85%B5%E1%86%AF%E1%84%8C%E1%85%A1%E1%86%B8%E1%84%92%E1%85%AA.png",
-        "description": "-"
+        "description": "거품망, 비누트레이 등"
     }, {
         "room_type": "RT16",
         "category": "헤어용품",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8B%E1%85%AD%E1%86%A8%E1%84%89%E1%85%B5%E1%86%AF%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7/%E1%84%92%E1%85%A6%E1%84%8B%E1%85%A5%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7.png",
-        "description": "-"
+        "description": "샴푸, 린스 등"
     }, {
         "room_type": "RT21",
         "category": "세제/세탁용품",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8C%E1%85%AE%E1%84%87%E1%85%A1%E1%86%BC%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7/%E1%84%89%E1%85%A6%E1%84%90%E1%85%A1%E1%86%A8%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7.png",
-        "description": "-"
+        "description": "주방세제, 세탁세제 등"
     }, {
         "room_type": "RT22",
         "category": "식기",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8C%E1%85%AE%E1%84%87%E1%85%A1%E1%86%BC%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7/%E1%84%89%E1%85%B5%E1%86%A8%E1%84%80%E1%85%B5.png",
-        "description": "-"
+        "description": "수저, 컵 등"
     }, {
         "room_type": "RT23",
         "category": "주방잡화",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8C%E1%85%AE%E1%84%87%E1%85%A1%E1%86%BC%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7/%E1%84%8C%E1%85%AE%E1%84%87%E1%85%A1%E1%86%BC%E1%84%8C%E1%85%A1%E1%86%B8%E1%84%92%E1%85%AA.png",
-        "description": "-"
+        "description": "고무장갑, 장바구니 등"
     }, {
         "room_type": "RT31",
         "category": "생활용품",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8E%E1%85%B5%E1%86%B7%E1%84%89%E1%85%B5%E1%86%AF/%E1%84%89%E1%85%A2%E1%86%BC%E1%84%92%E1%85%AA%E1%86%AF%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7.png",
-        "description": "-"
+        "description": "실내화, 인센스 등"
     }, {
         "room_type": "RT32",
         "category": "화장품",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8E%E1%85%B5%E1%86%B7%E1%84%89%E1%85%B5%E1%86%AF/%E1%84%92%E1%85%AA%E1%84%8C%E1%85%A1%E1%86%BC%E1%84%91%E1%85%AE%E1%86%B7.png",
-        "description": "-"
+        "description": "세럼, 립제품 등"
     }, {
         "room_type": "RT33",
         "category": "반려동물용품",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8E%E1%85%B5%E1%86%B7%E1%84%89%E1%85%B5%E1%86%AF/%E1%84%87%E1%85%A1%E1%86%AB%E1%84%85%E1%85%A7%E1%84%83%E1%85%A9%E1%86%BC%E1%84%86%E1%85%AE%E1%86%AF.png",
-        "description": "-"
+        "description": "펫샴푸, 배변봉투 등"
     }, {
         "room_type": "RT34",
         "category": "문구",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8E%E1%85%B5%E1%86%B7%E1%84%89%E1%85%B5%E1%86%AF/%E1%84%86%E1%85%AE%E1%86%AB%E1%84%80%E1%85%AE.png",
-        "description": "-"
+        "description": "필기구, 노트 등"
     }, {
         "room_type": "RT35",
         "category": "의류/가방",
         "thumbnail": "https://zero-houst.s3.ap-northeast-2.amazonaws.com/%E1%84%8E%E1%85%B5%E1%86%B7%E1%84%89%E1%85%B5%E1%86%AF/%E1%84%80%E1%85%A1%E1%84%87%E1%85%A1%E1%86%BC.png",
-        "description": "-"
+        "description": "쇼핑백, 파우치 등"
     }
 ]
