@@ -198,17 +198,11 @@ class HashtagCategoryAPIView(APIView):
         targetPath = os.path.join(curPath, 'products/json/subcategory.json')
         with open(targetPath, 'r') as file:
             data = json.load(file)
-        tmpDictList = []
-        for k, v in data.items():
-            tmpDictList.append({
-                'room_type': k,
-                'category': v
-            })
         
         filt = "RT"
         if 'room_type' in request.query_params:
             filt = request.query_params['room_type']
         
-        filteredDictList = [d for d in tmpDictList if d['room_type'].startswith(filt)]
+        filteredDictList = [d for d in data if d['room_type'].startswith(filt)]
         return Response(filteredDictList, status=status.HTTP_200_OK)
 
