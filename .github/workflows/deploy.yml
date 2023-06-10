@@ -13,8 +13,11 @@ jobs:
       - run: git log --pretty=oneline
       - name: Install Dependencies
         run: |
-          /bin/bash entrypoint.sh
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python3 manage.py collectstatic
         working-directory: ${{ env.working-directory }}
+
       - name: Run tests
         run: |
           python manage.py test
