@@ -35,9 +35,10 @@ class Hashtag(BaseModel):
     room_type = models.CharField(default="-", max_length=4, null=False)
     hash_desc = models.CharField(default="-", max_length=1000, null=False)
     hash_thumbnail = models.CharField(default="-", max_length=300, null=False)
+    is_active = models.CharField(default="Y", max_length=1, null=False)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'hashtags'
 
 class ProductHashtag(BaseModel):
