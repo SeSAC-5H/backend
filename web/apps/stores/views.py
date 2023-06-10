@@ -18,30 +18,10 @@ from geopy.distance import distance
     summary="상점 상세정보를 조회 및 추가합니다.",
     parameters=[
         OpenApiParameter(
-            name="store_type",
-            description="상점 타입을 지정해 주세요.",
+            name="lat, lon",
+            description="위도, 경도를 입력해주세요, 50미터 이내의 상점이 나오게 됩니다. ex)lat=37.61196834, lon=37.61196834",
             type=OpenApiTypes.STR,
             location=OpenApiParameter.QUERY,
-            examples=[
-                OpenApiExample(
-                    name="1-카페",
-                ),
-                OpenApiExample(
-                    name="1-식당",
-                ),
-                OpenApiExample(
-                    name="3-리필샵",
-                ),
-                OpenApiExample(
-                    name="4-생필품",
-                ),
-                OpenApiExample(
-                    name="5-기타",
-                ),
-                OpenApiExample(
-                    name="없음-전체",
-                ),
-            ],
         ),
     ],
 )
@@ -67,10 +47,10 @@ class StoreListCreateAPIView(ListCreateAPIView):
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
 
-        if "coord_x" in queryParams and "coord_y" in queryParams:
+        if "lon" in queryParams and "lat" in queryParams:
             user_location = (
-                float(queryParams["coord_y"]),
-                float(queryParams["coord_x"]),
+                float(queryParams["lat"]),
+                float(queryParams["lon"]),
             )
             near_stores = []
             for store in self.stores:
