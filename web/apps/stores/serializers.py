@@ -25,6 +25,8 @@ class StoreCreateSerializer(CreateSerializer):
             "store_link",
             "store_coord_x",
             "store_coord_y",
+            "store_insta",
+            "store_item",
         ]
 
     def create(self, validated_data):
