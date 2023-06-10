@@ -6,6 +6,11 @@ server {
     access_log  /var/log/nginx/logs/host.access.log  main;
 
     location / {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
+        add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range';
+
         proxy_pass http://web:8000/;
         proxy_redirect     off;
         proxy_set_header   Host $host;
