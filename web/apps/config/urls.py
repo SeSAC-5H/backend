@@ -18,11 +18,12 @@ from django.urls import path, include
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('users/', include('users.urls.users')),
-    path('auth/', include('users.urls.auth')),
-    path('products/', include('products.urls.products')),
-    path('brands/', include('products.urls.brands')),
-    path('hashtags/', include('products.urls.hashtags')),
+    path("users/", include("users.urls.users")),
+    path("auth/", include("users.urls.auth")),
+    path("products/", include("products.urls.products")),
+    path("brands/", include("products.urls.brands")),
+    path("hashtags/", include("products.urls.hashtags")),
+    path("stores/", include("stores.urls.stores")),
 ]
 
 from drf_spectacular.views import SpectacularJSONAPIView
@@ -33,6 +34,14 @@ from drf_spectacular.views import SpectacularYAMLAPIView
 urlpatterns += [
     path("docs/json/", SpectacularJSONAPIView.as_view(), name="schema-json"),
     path("docs/yaml/", SpectacularYAMLAPIView.as_view(), name="swagger-yaml"),
-    path("docs/swagger/", SpectacularSwaggerView.as_view(url_name="schema-json"), name="swagger-ui",),
-    path("docs/redoc/", SpectacularRedocView.as_view(url_name="schema-json"), name="redoc",),
+    path(
+        "docs/swagger/",
+        SpectacularSwaggerView.as_view(url_name="schema-json"),
+        name="swagger-ui",
+    ),
+    path(
+        "docs/redoc/",
+        SpectacularRedocView.as_view(url_name="schema-json"),
+        name="redoc",
+    ),
 ]
