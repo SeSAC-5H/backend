@@ -41,6 +41,7 @@ from products.paginations import ProductPagination
 class ProductListCreateAPIView(ListCreateAPIView):
     permission_classes = [AllowAny]
     pagination_class = ProductPagination
+    serializer_class = ProductSerializer
 
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
@@ -118,7 +119,7 @@ class BrandCreateAPIView(CreateAPIView):
 )
 class HashtagListCreateAPIView(ListCreateAPIView):
     permission_classes = [AllowAny]
-    serializer_class = HashtagCreateSerializer
+    serializer_class = HashtagSerializer
 
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
