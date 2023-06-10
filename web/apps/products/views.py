@@ -62,7 +62,7 @@ class ProductListCreateAPIView(ListCreateAPIView):
         if 'hash_seq' in queryParams:
             hashSeq = queryParams['hash_seq']
             hashQ = get_object_or_404(Hashtag, hash_seq=hashSeq)
-            prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq=hashQ.hash_seq)
+            prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq=hashQ.hash_seq, hash_seq__is_active="Y")
             prodQs = [
                 prodHashQ.prod_seq
                 for prodHashQ in prodHashQs
