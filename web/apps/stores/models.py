@@ -35,3 +35,14 @@ class Stores(BaseModel):
     class Meta:
         managed = True
         db_table = "stores"
+
+
+class Report(BaseModel):
+    report_seq = models.AutoField(primary_key=True)
+    report_name = models.CharField(default="-", max_length=100, null=False)
+    report_address = models.CharField(default="-", max_length=300, null=False)
+    report_tel = models.CharField(default="-", max_length=100, null=False)
+
+    class Meta:
+        managed = True
+        db_table = "report"

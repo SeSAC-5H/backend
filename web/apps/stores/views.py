@@ -1,8 +1,9 @@
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, CreateAPIView
 from rest_framework.permissions import AllowAny
 from stores.serializers import (
     StoreCreateSerializer,
     StoreSerializer,
+    ReportCreateSerializer,
 )
 from rest_framework.response import Response
 from django.http import Http404
@@ -90,3 +91,47 @@ class StoreListCreateAPIView(ListCreateAPIView):
         else:
             serializer = StoreSerializer(self.stores, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@extend_schema(
+    tags=["상점"],
+    summary="상점정보를 추가합니다.",
+    parameters=[
+        OpenApiParameter(
+            name="report_name",
+            type=str,
+            location=OpenApiParameter.PATH,
+            description="상점 이름 입니다.",
+            required=True,
+        ),
+        OpenApiParameter(
+            name="report_address",
+            type=str,
+            location=OpenApiParameter.PATH,
+            description="상점 주소 입니다.",
+            required=True,
+        ),
+        OpenApiParameter(
+            name="report_tel",
+            type=str,
+            location=OpenApiParameter.PATH,
+            description="상점 전화번호 입니다.",
+            required=True,
+        ),
+    ],
+)
+class ReportCreateAPIView(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ReportCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = {}
+        try:
+            super().create(request, *args, **kwargs)
+            data["message"] = "상점이 정상적으로 추가되었습니다."
+            return Response(data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response(
+                {"message": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
