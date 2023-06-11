@@ -52,7 +52,7 @@ class StoreListCreateAPIView(ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
-        meter = 150
+        meter = 100
         if "distance" in queryParams:
             meter = int(queryParams["distance"])
 
