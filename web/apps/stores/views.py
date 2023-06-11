@@ -96,29 +96,16 @@ class StoreListCreateAPIView(ListCreateAPIView):
 @extend_schema(
     tags=["상점"],
     summary="상점정보를 추가합니다.",
-    parameters=[
-        OpenApiParameter(
-            name="report_name",
-            type=str,
-            location=OpenApiParameter.PATH,
-            description="상점 이름 입니다.",
-            required=True,
-        ),
-        OpenApiParameter(
-            name="report_address",
-            type=str,
-            location=OpenApiParameter.PATH,
-            description="상점 주소 입니다.",
-            required=True,
-        ),
-        OpenApiParameter(
-            name="report_tel",
-            type=str,
-            location=OpenApiParameter.PATH,
-            description="상점 전화번호 입니다.",
-            required=True,
-        ),
-    ],
+    request={
+        "multipart/form-data": {
+            "type": "object",
+            "properties": {
+                "report_name": {"type": "string"},
+                "report_address": {"type": "string"},
+                "report_tel": {"type": "string"},
+            },
+        },
+    },
 )
 class ReportCreateAPIView(CreateAPIView):
     permission_classes = [AllowAny]
