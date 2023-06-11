@@ -23,6 +23,12 @@ from geopy.distance import distance
             type=OpenApiTypes.STR,
             location=OpenApiParameter.QUERY,
         ),
+        OpenApiParameter(
+            name="distance",
+            description="검색할 반경을 입력해주세요. 디폴트 150m 입니다.",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+        ),
     ],
 )
 class StoreListCreateAPIView(ListCreateAPIView):
@@ -46,6 +52,9 @@ class StoreListCreateAPIView(ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
+        meter = 150
+        if "distance" in queryParams:
+            meter = int(queryParams["distance"])
 
         if "lon" in queryParams and "lat" in queryParams:
             user_location = (
@@ -58,7 +67,7 @@ class StoreListCreateAPIView(ListCreateAPIView):
                     float(store.store_coord_y),
                     float(store.store_coord_x),
                 )
-                if distance(user_location, store_location).m <= 50:
+                if distance(user_location, store_location).m <= meter:
                     serializer = StoreSerializer(store)
                     near_stores.append(
                         {
