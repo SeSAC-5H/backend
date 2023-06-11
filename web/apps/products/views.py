@@ -193,6 +193,8 @@ class ProductHashtagCreateAPIView(CreateAPIView):
 )
 class HashtagCategoryAPIView(APIView):
     permission_classes = [AllowAny]
+    serializer_class = HashtagSerializer
+
     def get(self, request):
         curPath = os.getcwd()
         targetPath = os.path.join(curPath, 'products/json/subcategory.json')
