@@ -1,13 +1,16 @@
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import AllowAny
-from stores.serializers import StoreCreateSerializer, StoreSerializer
+from stores.serializers import (
+    StoreCreateSerializer,
+    StoreSerializer,
+)
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
 from stores.models import Stores
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter
-from drf_spectacular.utils import extend_schema, OpenApiExample
+from drf_spectacular.utils import extend_schema
 from geopy.distance import distance
 
 # Create your views here.
@@ -18,8 +21,14 @@ from geopy.distance import distance
     summary="상점 상세정보를 조회 및 추가합니다.",
     parameters=[
         OpenApiParameter(
-            name="lat, lon",
-            description="위도, 경도를 입력해주세요, 50미터 이내의 상점이 나오게 됩니다. ex)lat=37.61196834, lon=37.61196834",
+            name="lat",
+            description="위도를 입력해주세요. ex) lat=37.61196834",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+        ),
+        OpenApiParameter(
+            name="lon",
+            description="경도를 입력해주세요, ex)lon=127.07948812",
             type=OpenApiTypes.STR,
             location=OpenApiParameter.QUERY,
         ),
