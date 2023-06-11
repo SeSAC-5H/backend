@@ -8,7 +8,7 @@ from stores.models import Stores
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter
 from drf_spectacular.utils import extend_schema, OpenApiExample
-
+from geopy.distance import distance
 
 # Create your views here.
 
@@ -18,36 +18,17 @@ from drf_spectacular.utils import extend_schema, OpenApiExample
     summary="상점 상세정보를 조회 및 추가합니다.",
     parameters=[
         OpenApiParameter(
-            name="store_type",
-            description="상점 타입을 지정해 주세요.",
+            name="lat, lon",
+            description="위도, 경도를 입력해주세요, 50미터 이내의 상점이 나오게 됩니다. ex)lat=37.61196834, lon=37.61196834",
             type=OpenApiTypes.STR,
             location=OpenApiParameter.QUERY,
-            examples=[
-                OpenApiExample(
-                    name="1-카페",
-                ),
-                OpenApiExample(
-                    name="1-식당",
-                ),
-                OpenApiExample(
-                    name="3-리필샵",
-                ),
-                OpenApiExample(
-                    name="4-생필품",
-                ),
-                OpenApiExample(
-                    name="5-기타",
-                ),
-                OpenApiExample(
-                    name="없음-전체",
-                ),
-            ],
         ),
     ],
 )
 class StoreListCreateAPIView(ListCreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = StoreCreateSerializer
+    stores = Stores.objects.exclude(store_subcate="1")
 
     def create(self, request, *args, **kwargs):
         data = {}
@@ -65,11 +46,29 @@ class StoreListCreateAPIView(ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
-        if "store_type" in queryParams:
-            storeType = queryParams["store_type"]
-            serializer = StoreSerializer(
-                Stores.objects.filter(store_subcate=storeType), many=True
+
+        if "lon" in queryParams and "lat" in queryParams:
+            user_location = (
+                float(queryParams["lat"]),
+                float(queryParams["lon"]),
             )
+            near_stores = []
+            for store in self.stores:
+                store_location = (
+                    float(store.store_coord_y),
+                    float(store.store_coord_x),
+                )
+                if distance(user_location, store_location).m <= 50:
+                    serializer = StoreSerializer(store)
+                    near_stores.append(
+                        {
+                            "store": serializer.data,
+                            "distance": distance(
+                                user_location, store_location
+                            ).m,
+                        }
+                    )
+            return Response(near_stores, status=status.HTTP_200_OK)
         else:
-            serializer = StoreSerializer(Stores.objects.all(), many=True)
+            serializer = StoreSerializer(self.stores, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
