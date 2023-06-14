@@ -63,10 +63,11 @@ class ProductListCreateAPIView(ListCreateAPIView):
             hashSeq = queryParams['hash_seq']
             hashQ = get_object_or_404(Hashtag, hash_seq=hashSeq)
             prodHashQs = ProductHashtag.objects.select_related('prod_seq').filter(hash_seq=hashQ.hash_seq)
-            prodQs = [
-                prodHashQ.prod_seq
+            prodSeqList = [
+                prodHashQ.prod_seq.prod_seq
                 for prodHashQ in prodHashQs
             ]
+            prodQs = Product.objects.select_related('brand_seq').filter(prod_seq__in=prodSeqList)
             prodSerializer = ProductSerializer(prodQs, many=True)
 
             totalProductCnt = len(prodSerializer.data)
