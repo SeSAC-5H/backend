@@ -32,6 +32,7 @@ class Brand(BaseModel):
 class Hashtag(BaseModel):
     hash_seq = models.AutoField(primary_key=True)
     hash_name = models.CharField(default="-", max_length=100, null=False)
+    hash_avg_price = models.IntegerField(default=0,)
     room_type = models.CharField(default="-", max_length=4, null=False)
     hash_desc = models.CharField(default="-", max_length=1000, null=False)
     hash_thumbnail = models.CharField(default="-", max_length=300, null=False)

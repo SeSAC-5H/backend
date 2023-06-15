@@ -155,6 +155,19 @@ class HashtagListCreateAPIView(ListCreateAPIView):
             data['message'] = str(e)
             return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class HashtagAPIView(ListCreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = HashtagSerializer
+
+    def get(self, request, id = None, *args, **kwargs):
+        if(id is None ):
+            return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
+        hashSerializer = HashtagSerializer(Hashtag.objects.get(hash_seq=id))
+        ret = hashSerializer.data
+        print(ret)
+        
+        return Response(ret, status=status.HTTP_200_OK)
+
 @extend_schema(
     tags=["상품"],
     summary="상품과 해시태그를 연결합니다.",

@@ -80,6 +80,7 @@ class HashtagSerializer(serializers.ModelSerializer):
             'room_type',
             'hash_desc',
             'hash_thumbnail',
+            'hash_avg_price',
         ]
 
 class HashtagCreateSerializer(CreateSerializer):
