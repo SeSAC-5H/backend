@@ -7,4 +7,6 @@ python3 manage.py collectstatic
 
 # python manage.py migrate
 
-gunicorn --bind 0.0.0.0:8000 config.wsgi:application
+python3 manage.py runserver 0.0.0.0:8000
+
+# gunicorn --bind 0.0.0.0:8000 config.wsgi:application
