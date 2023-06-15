@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
-
+from django.db.models import Count
 from products.models import Product, Hashtag, ProductHashtag
 
 from drf_spectacular.types import OpenApiTypes
@@ -218,11 +218,20 @@ class HashtagCategoryAPIView(APIView):
         targetPath = os.path.join(curPath, 'products/json/subcategory.json')
         with open(targetPath, 'r') as file:
             data = json.load(file)
-        
+            
+                
         filt = "RT"
         if 'room_type' in request.query_params:
             filt = request.query_params['room_type']
         
-        filteredDictList = [d for d in data if d['room_type'].startswith(filt)]
+        queryset = Hashtag.objects.filter(is_active='Y').values('room_type').annotate(
+            max_count=Count('room_type'),
+        ).values('room_type') 
+        
+        filteredDictList = [d for d in data if d['room_type'].startswith(filt) 
+                            and queryset.filter(room_type=d['room_type']).count() > 0]
+        
+
+        
         return Response(filteredDictList, status=status.HTTP_200_OK)
 
