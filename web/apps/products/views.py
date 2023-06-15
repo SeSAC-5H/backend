@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from django.http import Http404
 from rest_framework import status
 from django.db.models import Count
-from products.models import Product, Hashtag, ProductHashtag
+from products.models import Product, Hashtag, ProductHashtag, HashtagCategory
 
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema_view
@@ -214,24 +214,29 @@ class HashtagCategoryAPIView(APIView):
     serializer_class = HashtagSerializer
 
     def get(self, request):
-        curPath = os.getcwd()
-        targetPath = os.path.join(curPath, 'products/json/subcategory.json')
-        with open(targetPath, 'r') as file:
-            data = json.load(file)
-            
-                
         filt = "RT"
         if 'room_type' in request.query_params:
             filt = request.query_params['room_type']
         
-        queryset = Hashtag.objects.filter(is_active='Y').values('room_type').annotate(
-            max_count=Count('room_type'),
-        ).values('room_type') 
-        
-        filteredDictList = [d for d in data if d['room_type'].startswith(filt) 
-                            and queryset.filter(room_type=d['room_type']).count() > 0]
-        
+        uniqueHashRoomTypeList = list(
+            Hashtag.objects.filter(
+                is_active="Y",
+                room_type__startswith=filt
+            ).values_list(
+                'room_type', flat=True
+            ).distinct())
+        hashCateQs = HashtagCategory.objects.filter(room_type__in=uniqueHashRoomTypeList)
 
+        # TODO: Serializer로 처리
+        filteredDictList =[
+            {
+                'room_type': hashCateQ.room_type,
+                'category': hashCateQ.category,
+                'thumbnail': hashCateQ.thumbnail,
+                'description': hashCateQ.description,
+            }
+            for hashCateQ in hashCateQs
+        ]
         
         return Response(filteredDictList, status=status.HTTP_200_OK)
 

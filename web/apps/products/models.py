@@ -49,5 +49,16 @@ class ProductHashtag(BaseModel):
     hash_seq = models.ForeignKey(to="products.Hashtag", db_column="hash_seq", on_delete=models.PROTECT)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'productHashtags'
+
+class HashtagCategory(BaseModel):
+    hash_cate_seq = models.AutoField(primary_key=True) 
+    category = models.CharField(default="-", max_length=45, null=False)
+    room_type = models.CharField(default="-", max_length=4, null=False)
+    thumbnail = models.CharField(default="-", max_length=300, null=False)
+    description = models.CharField(default="-", max_length=100, null=False)
+
+    class Meta:
+        managed = True
+        db_table = 'hashtagCategories'
