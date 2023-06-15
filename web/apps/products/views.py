@@ -140,7 +140,11 @@ class HashtagListCreateAPIView(ListCreateAPIView):
         ret = {}
         if 'room_type' in queryParams:
             roomType = queryParams['room_type']
-            hashSerializer = HashtagSerializer(Hashtag.objects.filter(room_type__startswith=roomType), many=True)
+            hashSerializer = HashtagSerializer(
+                Hashtag.objects.filter(
+                    room_type__startswith=roomType,
+                    is_active='Y'), 
+                many=True)
             ret = hashSerializer.data
         return Response(ret, status=status.HTTP_200_OK)
 
