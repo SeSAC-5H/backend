@@ -300,5 +300,6 @@ pip-selfcheck.json
 .env
 staticfiles
 .DS_Store
+*.csv
 
 migrations/
