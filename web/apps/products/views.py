@@ -15,8 +15,7 @@ from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schem
 from drf_spectacular.utils import extend_schema
 from products.paginations import ProductPagination
 
-import json
-import os
+from products.permissions import IsUserOrReadonly
 
 @extend_schema(
         tags=["상품"],
@@ -43,7 +42,7 @@ import os
         ],
     )
 class ProductListCreateAPIView(ListCreateAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsUserOrReadonly]
     pagination_class = ProductPagination
     serializer_class = ProductSerializer
 
@@ -105,7 +104,7 @@ class ProductListCreateAPIView(ListCreateAPIView):
     summary="새로운 브랜드를 추가합니다.",
 )
 class BrandCreateAPIView(CreateAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsUserOrReadonly]
     serializer_class = BrandCreateSerializer
 
     def create(self, request, *args, **kwargs):
@@ -132,7 +131,7 @@ class BrandCreateAPIView(CreateAPIView):
     ],
 )
 class HashtagListCreateAPIView(ListCreateAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsUserOrReadonly]
     serializer_class = HashtagSerializer
 
     def list(self, request, *args, **kwargs):
@@ -160,7 +159,7 @@ class HashtagListCreateAPIView(ListCreateAPIView):
             return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class HashtagAPIView(ListCreateAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsUserOrReadonly]
     serializer_class = HashtagSerializer
 
     def get(self, request, id = None, *args, **kwargs):
@@ -168,8 +167,6 @@ class HashtagAPIView(ListCreateAPIView):
             return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
         hashSerializer = HashtagSerializer(Hashtag.objects.get(hash_seq=id))
         ret = hashSerializer.data
-        print(ret)
-        
         return Response(ret, status=status.HTTP_200_OK)
 
 @extend_schema(
