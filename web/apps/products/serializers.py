@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
+from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 from core.serializers import CreateSerializer
 from django.shortcuts import get_object_or_404
 from django.http import Http404
@@ -7,7 +7,7 @@ from django.http import Http404
 from products.models import Product, Brand, Hashtag, ProductHashtag
 
 class ProductSerializer(serializers.ModelSerializer):
-    brand_name = serializers.CharField(source='get_brand_name')
+    brand_name = serializers.CharField(source='get_brand_name', read_only=True)
 
     class Meta:
         model = Product
@@ -19,7 +19,6 @@ class ProductSerializer(serializers.ModelSerializer):
             'prod_thumbnail',
             'brand_name'
         ]
-        
 
 class ProductCreateSerializer(CreateSerializer):
     representation_serializer_class = ProductSerializer
@@ -35,6 +34,12 @@ class ProductCreateSerializer(CreateSerializer):
             'prod_thumbnail',
             'brand_name',
         ]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Product.objects.all(),
+                fields=['prod_name', 'prod_link']
+            )
+        ]
     
     def validate(self, data):
         brandObj = get_object_or_404(Brand, brand_name=data['brand_name'])
@@ -44,6 +49,7 @@ class ProductCreateSerializer(CreateSerializer):
     def create(self, validated_data):
         validated_data.pop('brand_name')
         return Product.objects.create(**validated_data)
+    
 
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,12 +91,20 @@ class HashtagSerializer(serializers.ModelSerializer):
 
 class HashtagCreateSerializer(CreateSerializer):
     representation_serializer_class = HashtagSerializer
+    hash_name = serializers.CharField(
+        validators=[
+            UniqueValidator(queryset=Hashtag.objects.all())
+        ]
+    )
 
     class Meta:
         model = Hashtag
         fields = [
             'hash_name',
             'room_type',
+            'hash_desc',
+            'hash_thumbnail',
+            'hash_avg_price',
         ]
     
     def create(self, validated_data):
