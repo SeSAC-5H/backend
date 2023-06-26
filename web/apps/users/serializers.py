@@ -31,4 +31,4 @@ class UserCreateSerializer(CreateSerializer):
     
     def create(self, validated_data):
         validated_data.pop('password2')
-        return User.objects.createMember(**validated_data)
+        return User.objects.createUser(**validated_data)
