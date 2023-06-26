@@ -123,7 +123,7 @@ class ProductModelViewSet(ModelViewSet):
             return Response(data, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             data['message'] = str(e)
-            return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
         return Response(data, status=status.HTTP_201_CREATED)
 
 @extend_schema(
@@ -143,7 +143,7 @@ class BrandCreateAPIView(CreateAPIView):
             return Response(data, status=status.HTTP_201_CREATED)
         except Exception as e:
             data['message'] = str(e)
-            return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 @extend_schema(
     tags=["상품"],
@@ -208,7 +208,7 @@ class HashtagModelViewSet(ModelViewSet):
             return Response(data, status=status.HTTP_201_CREATED)
         except Exception as e:
             data['message'] = str(e)
-            return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 class HashtagAPIView(ListCreateAPIView):
     permission_classes = [IsUserOrReadonly]
@@ -244,7 +244,7 @@ class ProductHashtagCreateAPIView(CreateAPIView):
             return Response(data, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             data['message'] = str(e)
-            return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 @extend_schema(
     tags=["상품"],

@@ -88,6 +88,19 @@ class ProductModelViewSetTest(E2EBaseTestCase):
             brand_name="아낌없이주는나무",
         )
 
+    def test_failure_create_WithWrongBrand(self):
+        res = self.generic_test(
+            url=self.url,
+            method="post",
+            expectedStatusCode=404,
+            authUser=self.user,
+            prod_name="대나무칫솔",
+            prod_link="http://",
+            prod_discount=9000,
+            prod_thumbnail="http://",
+            brand_name="아낌없이주는나무2",
+        )
+
     def test_failure_create_WithoutAuthUser(self):
         res = self.generic_test(
             url=self.url,
@@ -104,7 +117,7 @@ class ProductModelViewSetTest(E2EBaseTestCase):
         res = self.generic_test(
             url=self.url,
             method="post",
-            expectedStatusCode=500,
+            expectedStatusCode=400,
             authUser=self.user,
             prod_link="http://",
             prod_discount=9000,
@@ -116,7 +129,7 @@ class ProductModelViewSetTest(E2EBaseTestCase):
         res = self.generic_test(
             url=self.url,
             method="post",
-            expectedStatusCode=500,
+            expectedStatusCode=400,
             authUser=self.user,
             prod_name="대나무칫솔",
             prod_discount=9000,
@@ -128,10 +141,42 @@ class ProductModelViewSetTest(E2EBaseTestCase):
         res = self.generic_test(
             url=self.url,
             method="post",
-            expectedStatusCode=500,
+            expectedStatusCode=400,
             authUser=self.user,
             prod_name="대나무칫솔",
             prod_link="http://",
             prod_discount=9000,
             prod_thumbnail="http://",
+        )
+
+class BrandCreateAPIViewTest(E2EBaseTestCase):
+    url = reverse_lazy('brands:create')
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.user = cls.createUser()
+    
+    def test_success_create(self):
+        res = self.generic_test(
+            url=self.url,
+            method="post",
+            expectedStatusCode=201,
+            authUser=self.user,
+            brand_name="최고의브랜드",
+        )
+
+    def test_failure_create_WithoutAuthUser(self):
+        res = self.generic_test(
+            url=self.url,
+            method="post",
+            expectedStatusCode=401,
+            brand_name="최고의브랜드",
+        )
+
+    def test_failure_create_WithoutBrandName(self):
+        res = self.generic_test(
+            url=self.url,
+            method="post",
+            expectedStatusCode=400,
+            authUser=self.user,
         )
