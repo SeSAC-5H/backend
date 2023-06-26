@@ -3,7 +3,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 class CustomUserManager(BaseUserManager):
-    def createMember(self, username, password):
+    def createUser(self, username, password):
         member = self.model(username=username)
         member.set_password(password)
         member.save()

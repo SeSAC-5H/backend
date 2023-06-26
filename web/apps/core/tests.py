@@ -12,12 +12,12 @@ class E2EBaseTestCase(TestCase):
         url,
         method,
         expectedStatusCode,
-        authMember: Optional[User] = None,
+        authUser: Optional[User] = None,
         **data,
     ):
         request = getattr(self.client, method)
 
-        header = self.getAuthHeaderByToken(self.getToken(authMember))
+        header = self.getAuthHeaderByToken(self.getToken(authUser))
         response = request(
             url,
             data=data,
@@ -30,16 +30,18 @@ class E2EBaseTestCase(TestCase):
     
 
     @classmethod
-    def createMember(cls, **kwargs):
-        return User.objects.createMember(**kwargs)
+    def createUser(cls, **kwargs):
+        userKwargs = {"username": "yamkim", "password": "5933"}
+        userKwargs.update(kwargs)
+        return User.objects.createUser(**userKwargs)
 
-    def getToken(self, member):
-        if not member:
+    def getToken(self, user):
+        if not user:
             return None
         serializer = TokenObtainPairSerializer(
             data={
-                "phone": member.phone,
-                "password": 5933,
+                "username": "yamkim",
+                "password": "5933",
             }
         )
         serializer.is_valid(raise_exception=True)
