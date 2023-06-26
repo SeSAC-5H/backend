@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, ListCreateAPIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny
 from products.serializers import ProductCreateSerializer, BrandCreateSerializer, HashtagCreateSerializer, ProductHashtagCreateSerializer, ProductSerializer, HashtagSerializer
 from django.shortcuts import get_object_or_404
@@ -15,12 +16,22 @@ from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schem
 from drf_spectacular.utils import extend_schema
 from products.paginations import ProductPagination
 
-import json
-import os
+from products.permissions import IsUserOrReadonly
 
 @extend_schema(
-        tags=["상품"],
-        summary="상품을 조회 및 추가합니다.",
+    tags=["상품"],
+)
+class ProductModelViewSet(ModelViewSet):
+    permission_classes = [IsUserOrReadonly]
+    pagination_class = ProductPagination
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return ProductCreateSerializer
+        return ProductSerializer
+
+    @extend_schema(
+        summary="상품을 조회합니다.",
         parameters=[
             OpenApiParameter(
                 name="hash_seq",
@@ -42,11 +53,6 @@ import os
             ),
         ],
     )
-class ProductListCreateAPIView(ListCreateAPIView):
-    permission_classes = [AllowAny]
-    pagination_class = ProductPagination
-    serializer_class = ProductSerializer
-
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
         page = 1
@@ -86,6 +92,26 @@ class ProductListCreateAPIView(ListCreateAPIView):
         
         return Response(retData, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        summary="상품을 생성합니다.",
+        examples=[
+            OpenApiExample(
+                "Valid example 1",
+                summary="테스트 상품 생성 예시",
+                description="인증이 확인된 사용자만 상품을 생성할 수 있습니다.",
+                value={
+                    "prod_name": "테스트",
+                    "prod_link": "http://",
+                    "prod_price": 10000,
+                    "prod_discount": 9000,
+                    "prod_thumbnail": "http://",
+                    "brand_name": "미정",
+                },
+                request_only=True,
+                response_only=False,  
+            ),
+        ],
+    )
     def create(self, request, *args, **kwargs):
         data = {}
         try:
@@ -105,7 +131,7 @@ class ProductListCreateAPIView(ListCreateAPIView):
     summary="새로운 브랜드를 추가합니다.",
 )
 class BrandCreateAPIView(CreateAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsUserOrReadonly]
     serializer_class = BrandCreateSerializer
 
     def create(self, request, *args, **kwargs):
@@ -121,20 +147,26 @@ class BrandCreateAPIView(CreateAPIView):
 
 @extend_schema(
     tags=["상품"],
-    summary="새로운 해시태그를 조회 및 추가합니다.",
-    parameters=[
-        OpenApiParameter(
-            name="room_type",
-            description="룸타입을 지정해 주세요.",
-            type=OpenApiTypes.STR,
-            location=OpenApiParameter.QUERY,
-        ),
-    ],
 )
-class HashtagListCreateAPIView(ListCreateAPIView):
-    permission_classes = [AllowAny]
-    serializer_class = HashtagSerializer
+class HashtagModelViewSet(ModelViewSet):
+    permission_classes = [IsUserOrReadonly]
 
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return HashtagCreateSerializer
+        return HashtagSerializer
+
+    @extend_schema(
+        summary="새로운 해시태그를 조회합니다.",
+        parameters=[
+            OpenApiParameter(
+                name="room_type",
+                description="룸타입을 지정해 주세요.",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+            ),
+        ],
+    )
     def list(self, request, *args, **kwargs):
         queryParams = request.query_params
         ret = {}
@@ -148,6 +180,25 @@ class HashtagListCreateAPIView(ListCreateAPIView):
             ret = hashSerializer.data
         return Response(ret, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        summary="새로운 해시태그를 생성합니다.",
+        examples=[
+            OpenApiExample(
+                "Valid example 1",
+                summary="테스트 해시태그 생성 예시",
+                description="인증이 확인된 사용자만 해시태그를 생성할 수 있습니다.",
+                value={
+                    "hash_name": "테스트",
+                    "room_type": "RT90",
+                    "hash_desc": "해시태그에 대한 설명",
+                    "hash_thumbnail": "http://",
+                    "hash_avg_price": 10000,
+                },
+                request_only=True,
+                response_only=False,  
+            ),
+        ],
+    )
     def create(self, request, *args, **kwargs):
         data = {}
         try:
@@ -160,7 +211,7 @@ class HashtagListCreateAPIView(ListCreateAPIView):
             return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class HashtagAPIView(ListCreateAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsUserOrReadonly]
     serializer_class = HashtagSerializer
 
     def get(self, request, id = None, *args, **kwargs):
@@ -168,8 +219,6 @@ class HashtagAPIView(ListCreateAPIView):
             return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
         hashSerializer = HashtagSerializer(Hashtag.objects.get(hash_seq=id))
         ret = hashSerializer.data
-        print(ret)
-        
         return Response(ret, status=status.HTTP_200_OK)
 
 @extend_schema(
