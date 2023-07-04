@@ -25,3 +25,10 @@
 - [스마트 서울맵](https://map.seoul.go.kr/smgis2/) 실시간 데이터 조회
 
 ### 시스템 아키텍처
+
+
+### Swagger 페이지
+Backend Open API
+- 링크: http://52.78.50.54/docs/swagger/  
+- 기본적으로 GET 요청은 모든 사용자들이 사용할 수 있습니다.
+- 상품, 브랜드, 해시태그 관련 POST 요청은 계정이 있는 사용자에 한해서 등록 가능합니다.
