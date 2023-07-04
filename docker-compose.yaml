@@ -18,3 +18,8 @@ services:
       - ./web/.env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
+
+networks:
+  my-net:
+    name: my-net
+    external: true
