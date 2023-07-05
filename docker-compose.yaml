@@ -7,6 +7,8 @@ services:
       - ./web/apps/staticfiles/:/staticfiles
     ports:
       - "80:80"
+    networks:
+      - my-net
     depends_on:
       - web
 
