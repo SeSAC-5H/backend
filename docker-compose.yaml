@@ -7,6 +7,8 @@ services:
       - ./web/apps/staticfiles/:/staticfiles
     ports:
       - "80:80"
+    networks:
+      - my-net
     depends_on:
       - web
 
@@ -18,3 +20,9 @@ services:
       - ./web/.env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
+    networks:
+      - my-net
+
+networks:
+  my-net:
+    external: true

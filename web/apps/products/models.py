@@ -17,7 +17,7 @@ class Product(BaseModel):
         return self.brand_seq.brand_name
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'products'
 
 class Brand(BaseModel):
@@ -26,7 +26,7 @@ class Brand(BaseModel):
     brand_link = models.CharField(default="-", max_length=300, null=False)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'brands'
 
 class Hashtag(BaseModel):
@@ -39,7 +39,7 @@ class Hashtag(BaseModel):
     is_active = models.CharField(default="Y", max_length=1, null=False)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'hashtags'
 
 class ProductHashtag(BaseModel):
@@ -49,7 +49,7 @@ class ProductHashtag(BaseModel):
     hash_seq = models.ForeignKey(to="products.Hashtag", db_column="hash_seq", on_delete=models.PROTECT)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'productHashtags'
 
 class HashtagCategory(BaseModel):
