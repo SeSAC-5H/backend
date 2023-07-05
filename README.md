@@ -24,8 +24,8 @@
   - [동구밭](https://brand.naver.com/donggubat/category/df115fcac7bf412bbeef2047c4b18c99?cp=1)
 - [스마트 서울맵](https://map.seoul.go.kr/smgis2/) 실시간 데이터 조회
 
-### 시스템 아키텍처
-
+### 서비스 페이지
+- 링크: http://52.78.50.54:3000/
 
 ### Swagger 페이지
 Backend Open API
